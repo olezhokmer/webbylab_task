@@ -3,6 +3,7 @@ const usersService = require('../services/users');
 
 exports.create = async (req, res, next) => {
     try {
+        if(!req.body || req.body.constructor != ({}).constructor) return res.status(400).json("Invalid body type.");
         if(!usersService.isValidEmail(req.body.email)) return res.status(400).json("Invalid email.");
         if(!usersService.isValidPass(req.body.password)) return res.status(400).json("Password length must be atleast 8 symbols long.");
         if(!usersService.isValidName(req.body.name)) return res.status(400).json("Invalid name.");

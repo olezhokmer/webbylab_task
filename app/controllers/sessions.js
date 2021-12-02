@@ -3,6 +3,7 @@ const usersService = require('../services/users');
 
 exports.create = async (req, res, next) => {
     try {
+        if(!req.body || req.body.constructor != ({}).constructor) return res.status(400).json("Invalid body type.");
         const user = await User.findOne({ where: { email: req.body.email } });
         if(!user) return res.status(400).json("User with this email not found.");
         if(!await usersService.comparePass(req.body.password, user.password)) return res.status(400).json("Incorrect password.");

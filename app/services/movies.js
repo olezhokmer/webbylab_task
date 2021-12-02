@@ -161,8 +161,8 @@ class MoviesService {
         throw "Invalid sort value."
         if(params.order && params.order != 'ASC' && params.order != 'DESC')
         throw "Invalid order value."
-        if(isNaN(Number(params.limit)) && Number(params.limit) < 0) throw "Invalid limit value."
-        if(isNaN(Number(params.offset)) && Number(params.offset) < 0) throw "Invalid offset value."
+        if(isNaN(Number(params.limit)) || Number(params.limit) < 0) throw "Invalid limit value."
+        if(isNaN(Number(params.offset)) || Number(params.offset) < 0) throw "Invalid offset value."
     }
 
     async listMovies(actor, title, search, sort = 'id', order = 'ASC', limit = 20, offset = 0) {

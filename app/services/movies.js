@@ -194,7 +194,17 @@ class MoviesService {
     }
 
     convertTxtMoviesFileToJson(txt) {
-
+        var splitted = txt.split(/\n\s*\n/);
+        splitted.pop()
+        splitted = splitted.map(row => {
+            let rows = row.split(/\n/)
+            let title = rows[0].replace("Title: ", "")
+            let year = Number(rows[1].replace("Release Year: ", ""))
+            let format = rows[2].replace("Format: ", "")
+            let actors = rows[3].replace("Stars: ", "").split(", ")
+            return {title, year, format, actors}
+        })
+        return splitted;
     }
 
     async createMultipleMovies(movies) {
@@ -206,6 +216,7 @@ class MoviesService {
                 actorNames = actorNames.concat(m.actors)
                 return { title : m.title, year : m.year, format : m.format }
             })
+            actorNames = [...new Set(actorNames)]
             if(MOVIE_MODELS.length) {
                 let moviesCreated = await Movie.bulkCreate(MOVIE_MODELS)
                 moviesCreated = moviesCreated.map(m => m.dataValues)

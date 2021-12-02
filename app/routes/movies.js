@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const controller = require('../controllers/movies')
 const usersMiddleware = require('../middleware/users');
+const fileupload = require("express-fileupload");
 
 router
     .use(usersMiddleware.injectUser, usersMiddleware.isAuthenticated)
@@ -9,6 +10,6 @@ router
     .patch('/:id', controller.update)
     .get('/:id', controller.show)
     .get('/', controller.list)
-    .post('/import', controller.import)
+    .post('/import', fileupload(), controller.import)
 
 module.exports = router;

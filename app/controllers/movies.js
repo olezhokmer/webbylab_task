@@ -76,18 +76,23 @@ exports.list = async (req, res, next) => {
     }
 }
 exports.import = async (req, res, next) => {
-    try {     
+
+    try {
+        let txt = req.files.movies.data.toString('utf8');
+        let jsonMovies = []
+
         try {
-            moviesService.validateMultipleMovies(req.body)
+            jsonMovies = moviesService.convertTxtMoviesFileToJson(txt)
+            moviesService.validateMultipleMovies(jsonMovies)
         } catch(ex){
             return res.status(400).json(ex)
         }
 
-        const movies = await moviesService.createMultipleMovies(req.body)
+        const movies = await moviesService.createMultipleMovies(jsonMovies)
         return res.status(201).json(
             { 
                 data: movies,
-                meta: { imported: movies.length, total: req.body.length }, 
+                meta: { imported: movies.length, total: jsonMovies.length }, 
                 status : 1 
             }
         )
